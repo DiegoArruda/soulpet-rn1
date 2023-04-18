@@ -102,9 +102,9 @@ app.get("/pets", async (req, res) => {
 });
 
 //Procura de pet
-app.get("pet/:id", (req, res) => {
+app.get("pet/:id", async (req, res) => {
   const { id } = req.params;
-  const pet = Pet.findByPk(id);
+  const pet = await Pet.findByPk(id);
   if (pet) {
     res.json(pet);
   } else res.status(404).json({ message: "Pet não encontrado" });
