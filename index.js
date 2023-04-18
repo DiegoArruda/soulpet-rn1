@@ -57,11 +57,25 @@ app.put("/clientes/:id", async (req, res) => {
       if (endereco) {
         await Endereco.update(endereco, { where: { clienteId: id } });
       }
-      await Cliente.update({ nome, email, telefone }, { where: { id: id } });
+      await Cliente.update({ nome, email, telefone });
       res.status(200).json({ message: "Cliente editado com sucesso" });
     } else res.status(404).json({ message: "Cliente não encontrado" });
   } catch (err) {
     res.status(500).json({ message: "Um erro ocorreu." });
+  }
+});
+
+//Excluir um cliente
+app.delete("/clientes/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const cliente = await Cliente.findOne({ where: { id } });
+    if (cliente) {
+      await cliente.destroy();
+      res.status(200).json({ message: "Cliente excluido com sucesso." });
+    } else res.status(404).json({ message: "Cliente não encontrado." });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
