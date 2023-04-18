@@ -95,6 +95,20 @@ app.post("/pets", async (req, res) => {
   }
 });
 
+//Lista dos pets
+app.get("/pets", async (req, res) => {
+  const listaPets = await Pet.findAll();
+  res.json(listaPets);
+});
+
+//Procura de pet
+app.get("pet/:id", (req, res) => {
+  const { id } = req.params;
+  const pet = Pet.findByPk(id);
+  if (pet) {
+    res.json(pet);
+  } else res.status(404).json({ message: "Pet não encontrado" });
+});
 //Escuta de eventos (listen)
 app.listen(4000, () => {
   // Gerar as tabelas a partir do model
