@@ -11,6 +11,7 @@ const { connection, authenticate } = require("./database/database");
 authenticate(connection);
 const Cliente = require("./database/cliente");
 const Endereco = require("./database/endereco");
+const Pet = require("./database/pet");
 
 //Definição de rotas
 app.get("/clientes", async (req, res) => {
@@ -79,12 +80,27 @@ app.delete("/clientes/:id", async (req, res) => {
   }
 });
 
+//Adicionar pet
+app.post("/pets", async (req, res) => {
+  const { nome, tipo, porte, dataNasc, clienteId } = req.body;
+
+  try {
+    const cliente = await Cliente.findByPk(clienteId);
+    if (cliente) {
+      const pet = await Pet.create({ nome, tipo, porte, dataNasc, clienteId });
+      res.status(201).json(pet);
+    } else res.status(404).json({ message: "Não encontrado" });
+  } catch (err) {
+    res.status(500).json({ message: "erro" });
+  }
+});
+
 //Escuta de eventos (listen)
 app.listen(4000, () => {
   // Gerar as tabelas a partir do model
   //Force = apaga tudo e recria as tabelas
   connection.sync({ force: true });
-  console.log("http://localhost:3000/");
+  console.log("http://localhost:4000/");
 });
 
 // Crud = CREATE RED UPDATE DELETE
