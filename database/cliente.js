@@ -26,7 +26,8 @@ const Cliente = connection.define("cliente", {
 });
 const Endereço = require("./endereco");
 
-Cliente.hasOne(Endereço);
+Cliente.hasOne(Endereço, { onDelete: "CASCADE" });
+//CASCADE = apagar o cliente, faz o endereço associado ser apagado junto
 Endereço.belongsTo(Cliente);
 
 module.exports = Cliente;
